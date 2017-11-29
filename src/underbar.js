@@ -240,8 +240,6 @@
     }, true);
   };
 
-// expect(_.every([true, {}, 1, 0], _.identity)).to.be.true;
-
   // Determine whether any of the elements pass a truth test. If no iterator is
   // provided, provide a default one
   _.some = function(collection, iterator) {
@@ -349,7 +347,7 @@
   _.memoize = function(func) {
     var alreadyCalled = {};
     
-    return function memoSpy () {
+    return function () {
       var key = JSON.stringify(arguments);
 
       if (!(key in alreadyCalled)) {
@@ -358,13 +356,14 @@
       return alreadyCalled[key];
     };
   };
-        // var spy = function() { return 'Dummy output'; });
-        // var memoSpy = _.memoize(spy);
 
-        // memoSpy([1, 2, 3]);
-        // expect(spy).to.have.been.calledOnce;
-        // memoSpy([1, 2, 3]);
-        // expect(spy).to.have.been.calledOnce;
+// var spy = function() { return 'Dummy output'; };
+//         var memoSpy = _.memoize(spy);
+
+//         memoSpy([1, 2, 3]);
+//         expect(spy).to.have.been.calledOnce;
+//         memoSpy(1, 2, 3);
+//         expect(spy).to.have.been.calledTwice;
 
   // Delays a function for the given number of milliseconds, and then calls
   // it with the arguments supplied.
@@ -373,6 +372,11 @@
   // parameter. For example _.delay(someFunction, 500, 'a', 'b') will
   // call someFunction('a', 'b') after 500ms
   _.delay = function(func, wait) {
+    var arg = [].slice.call(arguments);
+    setTimeout(function() {
+      // func (...arg.slice(2))}, wait);
+      func.apply(this, arg.slice(2));
+    }, wait);
   };
 
 
@@ -387,8 +391,37 @@
   // input array. For a tip on how to make a copy of an array, see:
   // http://mdn.io/Array.prototype.slice
   _.shuffle = function(array) {
+    var max = array.length;
+    var newIndex = [];
+
+    function randomize (min, max) {
+      return Math.floor(Math.random() * (max - min) + min);
+    }
+
+    for (var i = 0; i < array.length; i++) {
+      var num = randomize(0, max);
+      while (newIndex.includes(num)) {
+        num = randomize(0, max);          
+      }
+      newIndex.push(num);
+    }       
+    var result = [];
+    _.each(array, function (item, index) {
+      result.push(array[newIndex[index]]);
+    });
+
+    return result;
+    
   };
 
+      // it('should have the same elements as the original object', function() {
+      //   var numbers = [4, 5, 6];
+      //   var shuffled = _.shuffle(numbers).sort();
+
+      //   expect(shuffled).to.eql([4, 5, 6]);
+      // });
+
+  
 
   /**
    * ADVANCED
