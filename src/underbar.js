@@ -434,6 +434,12 @@
   // Calls the method named by functionOrKey on each value in the list.
   // Note: You will need to learn a bit about .apply to complete this.
   _.invoke = function(collection, functionOrKey, args) {
+    return _.map (collection, function(item) {
+      if (typeof functionOrKey === 'string') {
+        return item[functionOrKey](args);
+      }
+      return functionOrKey.apply(item, args);
+    });
   };
 
   // Sort the object's values by a criterion produced by an iterator.
@@ -441,6 +447,7 @@
   // of that string. For example, _.sortBy(people, 'name') should sort
   // an array of people by their name.
   _.sortBy = function(collection, iterator) {
+    
   };
 
   // Zip together two or more arrays with elements of the same index
@@ -449,6 +456,23 @@
   // Example:
   // _.zip(['a','b','c','d'], [1,2,3]) returns [['a',1], ['b',2], ['c',3], ['d',undefined]]
   _.zip = function() {
+    var result = [];
+    var arr = [].slice.call(arguments);
+    var maxArgLength = _.reduce(arr, function(max, item) {
+      if (item.length > max) {
+        max = item.length;
+      }
+      return max;
+    }, 0);
+
+    for (var i = 0; i < maxArgLength; i++) {
+      var arr1 = [];
+      for (var j = 0; j < arr.length; j++) {
+        arr1.push(arr[j][i]);
+      }
+      result.push(arr1);
+    }
+    return result;
   };
 
   // Takes a multidimensional array and converts it to a one-dimensional array.
