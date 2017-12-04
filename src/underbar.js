@@ -42,7 +42,7 @@
     if (i < 0) {
       return array;
     }
-    return n === undefined ? array[array.length - 1] : array.slice(i);    
+    return n === undefined ? array[array.length - 1] : array.slice(i);
   };
 
   // Call iterator(value, key, collection) for each element of collection.
@@ -51,7 +51,7 @@
   // Note: _.each does not have a return value, but rather simply runs the
   // iterator function over each item in the input collection.
   _.each = function(collection, iterator) {
-    if (collection.constructor === Array) {
+    if (Array.isArray(collection)) {
       for (var i = 0; i < collection.length; i++) {
         iterator(collection[i], i, collection);
       }
@@ -86,7 +86,6 @@
       if (test(item)) {
         result.push(item);
       }
-
     });
     return result;
   };
@@ -95,14 +94,10 @@
   _.reject = function(collection, test) {
     // TIP: see if you can re-use _.filter() here, without simply
     // copying code in and modifying it
-    var result = [];
-    _.each(collection, function (item) {
-      if (!test(item)) {
-        result.push(item);
-      }
+    var passed = _.filter(collection, test);
+    return _.filter(collection, function (item) {
+      return !passed.includes(item);
     });
-
-    return result;
   };
 
   // Produce a duplicate-free version of the array.
@@ -163,19 +158,19 @@
   // Reduces an array or object to a single value by repetitively calling
   // iterator(accumulator, item) for each item. accumulator should be
   // the return value of the previous iterator call.
-  //  
+  //
   // You can pass in a starting value for the accumulator as the third argument
   // to reduce. If no starting value is passed, the first element is used as
   // the accumulator, and is never passed to the iterator. In other words, in
   // the case where a starting value is not passed, the iterator is not invoked
   // until the second element, with the first element as its second argument.
-  //  
+  //
   // Example:
   //   var numbers = [1,2,3];
   //   var sum = _.reduce(numbers, function(total, number){
   //     return total + number;
   //   }, 0); // should be 6
-  //  
+  //
   //   var identity = _.reduce([5], function(total, number){
   //     return total + number * number;
   //   }); // should be 5, regardless of the iterator function passed in
@@ -245,7 +240,7 @@
   _.some = function(collection, iterator) {
     // TIP: There's a very clever way to re-use every() here.
 
-    
+
     if (iterator) {
       var newCollectionIterator = _.map(collection, function (item) {
         return !iterator(item);
@@ -258,7 +253,7 @@
       return (!_.every(newCollection));
     }
 
-    
+
   };
 
 
@@ -346,7 +341,7 @@
   // instead if possible.
   _.memoize = function(func) {
     var alreadyCalled = {};
-    
+
     return function () {
       var key = JSON.stringify(arguments);
 
@@ -401,17 +396,17 @@
     for (var i = 0; i < array.length; i++) {
       var num = randomize(0, max);
       while (newIndex.includes(num)) {
-        num = randomize(0, max);          
+        num = randomize(0, max);
       }
       newIndex.push(num);
-    }       
+    }
     var result = [];
     _.each(array, function (item, index) {
       result.push(array[newIndex[index]]);
     });
 
     return result;
-    
+
   };
 
       // it('should have the same elements as the original object', function() {
@@ -421,7 +416,7 @@
       //   expect(shuffled).to.eql([4, 5, 6]);
       // });
 
-  
+
 
   /**
    * ADVANCED
@@ -447,7 +442,7 @@
   // of that string. For example, _.sortBy(people, 'name') should sort
   // an array of people by their name.
   _.sortBy = function(collection, iterator) {
-    
+
   };
 
   // Zip together two or more arrays with elements of the same index
